@@ -5,23 +5,28 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script defer src="app.js"></script>
+  <script defer src="script.js"></script>
   <title>Tic Tac Toe</title>
 </head>
 <body>
     <main>
-        <div class="container">
-            <div class="blocks"></div>
-            <div class="blocks"></div>
-            <div class="blocks"></div>
-            <div class="blocks"></div>
-            <div class="blocks"></div>
-            <div class="blocks"></div>
-            <div class="blocks"></div>
-            <div class="blocks"></div>
-            <div class="blocks"></div>
-            
-        </div>
+        <head>
+            <button id="chooseCircle"class="btn">O</button>
+            <button id="chooseEx"class="btn">X</button>
+        </head>
+        <section>
+            <div class="container">
+                <div class="block" data-block =0></div>
+                <div class="block" data-block =1></div>
+                <div class="block" data-block =2></div>
+                <div class="block" data-block =3> </div>
+                <div class="block" data-block =4></div>
+                <div class="block" data-block =5></div>
+                <div class="block" data-block =6></div>
+                <div class="block" data-block =7></div>
+                <div class="block" data-block =8></div>
+            </div>
+    </section>
         <button id="restartBtn"class="btn">Restart</button>
     </main>
 </body>
