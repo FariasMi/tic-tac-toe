@@ -43,12 +43,21 @@ const gameBoard = (()=>{
         
     }
 
-    function isDrawn(){
-        return board.length === 9 
+    function isDrawn(mark){
+        let plays = 0;
+       board.forEach(place =>{
+           if(place !=''){
+            plays += 1; 
+           }
+       })
+      return !checkWinner(mark) && plays === 9;
+            
+         
     }
     return{
         markPosition,
         checkWinner,
+        isDrawn,
         restartBoard
     }
 
@@ -62,17 +71,21 @@ const players = (() =>{
     function defineTurn(){
         if(playerX.getTurn() === false && playerO.getTurn() === false){
             playerX.setTurn(true);
+            domView.gameMessage(playerX);
         }else{
             if(playerX.getTurn() === true && playerO.getTurn() === false){
                 playerX.setTurn(false);
                 playerO.setTurn(true);
+                domView.gameMessage(playerO);
             }else{
                 playerX.setTurn(true);
                 playerO.setTurn(false);
-               
+                domView.gameMessage(playerX);
             }  
 
           }
+
+          
           
     }
 
@@ -94,16 +107,21 @@ const players = (() =>{
 })();
 
 const domView = (()=>{
-    const screen = document.getElementsByTagName('main');
+    const message = document.getElementById('message');
     const gamePlaces = document.querySelectorAll('[data-block]');
     const restartBtn = document.getElementById('restartBtn');
+    const boot = document.getElementById('AI');
+    const player = document.getElementById('player');
     
  
     function startGame(){
             players.defineTurn();
-            gamePlaces.forEach(place =>place.addEventListener('click',markBoard,{once:true}));
+            gameMessage(players.playerTurn());
+             gamePlaces.forEach(place =>place.addEventListener('click',markBoard,{once:true}));
     
     }
+
+ 
 
     function markBoard(e){
         const player = players.playerTurn();
@@ -112,37 +130,43 @@ const domView = (()=>{
         place.textContent = player.getMark();
         gameBoard.markPosition(playPosition,player.getMark());
         players.defineTurn();
-        gameMessage(player.getMark());
+        if(gameBoard.checkWinner(player.getMark())){
+            gameMessage(player);
+            removeClick();          
+
+        }
+        
     }
     
     function gameMessage (player){
-        const message = document.createElement('p');
-        message.textContent = `It\'s' ${player} turn`
-        screen.appendChild(message);
-        if(gameBoard.checkWinner(player)){
-            message.textContent = `Winner's ${player}`
-            screen.appendChild(message);
-        }
-        console.log('opora')
+        let playerMark = player.getMark();
+        if(gameBoard.checkWinner(playerMark)){
+            message.textContent = `${playerMark} is the Winner`
+         }else{
+            if(gameBoard.isDrawn(playerMark)){
+                message.textContent = 'It\'s a tie!!'
+            }else{
+            message.textContent = `It\'s ${player.getMark()} turn`;
+            }
+       }
     }
     
-    
+    function removeClick(){
+        gamePlaces.forEach(place =>place.removeEventListener('click',markBoard));
+    }
     
           
     function restartGame(){
-        gamePlaces.forEach(place =>{
-            place.textContent= '';
-            place.removeEventListener('click', markBoard);
-        });
          gameBoard.restartBoard();
          players.deletePlayers();
-         startGame();
-    }
+         window.location.reload();
+        }
 
     restartBtn.addEventListener('click',restartGame);
     
     return{
-        startGame
+        startGame,
+        gameMessage
     }
 })();
 

@@ -13,14 +13,28 @@ html{
     --cell-size:100px;
     --mark-size:calc((var--cell-size)*.9);
 }
+
+header{
+  margin:auto;
+  display:flex;
+  flex-direction: column;
+  border:solid;
+  width: 80%;
+
+}
+
+h3{
+  margin:auto;
+  font-size: 3rem;
+
+}
 main{
-    width: 100vw;
-    height: 100vh;
+  display: none;
          
    }
    
 
-.container{
+#container{
     display: none;
     width: 30%;
     height: 400px;
@@ -32,6 +46,7 @@ main{
     justify-items: center;
     align-items: center;
     grid-template-columns: repeat(3,auto);
+    
   
 }
 
@@ -40,9 +55,7 @@ main{
    height: var(--cell-size);
    border: 1px solid black; 
    
-   
   
-   
 }
 
 .cell:first-child,
@@ -77,7 +90,16 @@ main{
     text-align: center;
     font-size: 3rem;
     padding: 30px;
+     
+}
 
-   
+#message{
+    text-align: center;
+    font-size: 3rem;
+    margin-top: 30px;
     
+}
+.player-section{
+  width: 80%;
+  margin: auto;
 }
