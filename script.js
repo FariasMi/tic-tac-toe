@@ -1,15 +1,3 @@
-Player = (mark) => {
-    let _turn = false;
-    let _bot  = false;
-    
-    const setMark = (mark) =>{mark = mark}
-    const getMark = () => mark 
-    const getTurn = () => _turn;
-    const setTurn = (turn) =>{_turn = turn}
-    const isAbot = (bot) => _bot = bot;
-    
-    return{getMark,setMark,getTurn,setTurn,isAbot}
-}
 
 const gameBoard = (()=>{
     let board = []
@@ -73,25 +61,19 @@ const gameBoard = (()=>{
 
 })();
 
-const bootPlayer= (() =>{
-    function bootChoosePosition(){
-        do{
-            position = Math.trunc(Math.random()*9); 
-        }while(!gameBoard.checkPosition);
-
-        return position;
-       
-            
-    }
-        
-    return{
-            bootChoosePosition
-    }
-    
-})();
-
-
 const players = (() =>{
+    Player = (mark) => {
+        let _turn = false;
+        let _bot  = false;
+        
+        const setMark = (mark) =>{mark = mark}
+        const getMark = () => mark 
+        const getTurn = () => _turn;
+        const setTurn = (turn) =>{_turn = turn}
+        const getIsAbot = () => _bot;
+        const setIsAbot = (bot) =>{_bot = bot};        
+        return{getMark,setMark,getTurn,setTurn,getIsAbot,setIsAbot}
+    }
     let playerX = Player('X');
     let playerO = Player('O');
 
@@ -117,6 +99,7 @@ const players = (() =>{
           
     }
 
+
     function playerTurn(){
         return playerX.getTurn() ? playerX : playerO;    
     } 
@@ -126,6 +109,7 @@ const players = (() =>{
         delete playerO;
     }
 
+   
     return {
         defineTurn,
         playerTurn,
@@ -140,44 +124,14 @@ const domView = (()=>{
     const message = document.getElementById('message');
     const gamePlaces = document.querySelectorAll('[data-block]');
     const restartBtn = document.getElementById('restartBtn');
-    const boot = document.getElementById('AI');
-    const player = document.getElementById('player');
-    
-   
+      
     function start(){
-        boot.addEventListener('click',startBootGame); 
-        player.addEventListener('click',startPlayerGame);
-   
-    }
-   
-    function startPlayerGame(){
-            showGame();
-            players.defineTurn();
-            gamePlaces.forEach(place =>place.addEventListener('click',markBoard,{once:true}));    
-    }
-
-    function startBootGame(){
-        showGame();
         players.defineTurn();
-
+        gamePlaces.forEach(place =>place.addEventListener('click',markBoard,{once:true})); 
+   
     }
    
- function showGame(){
-    screen.style.display = 'block';
-    options.style.display = 'none';
 
- }
-
- function markBootPosition(player){
-    let bootPosition =  bootPlayer.bootChoosePosition();
-    gamePlaces.forEach(place =>{
-        const place = e.target;
-        place.textContent = player.getMark();
-
-    }); 
-    
-    gameBoard.markPosition(bootPosition,player.getMark());
- }
     function markBoard(e){
         const player = players.playerTurn();
         const place = e.target;
@@ -187,12 +141,17 @@ const domView = (()=>{
         players.defineTurn();
         if(gameBoard.checkWinner(player.getMark())){
             gameMessage(player);
-            removeClick();          
+            removeClick();   
 
+        }
+        if(player.getIsAbot()){
+            ManageBotPlayerMark();
+            return;
         }
         
     }
-    
+
+  
     function gameMessage (player){
         let playerMark = player.getMark();
         if(gameBoard.checkWinner(playerMark)){
@@ -221,8 +180,6 @@ const domView = (()=>{
     
     return{
         start,
-        startPlayerGame,
-        startBootGame,
         gameMessage
     }
 })();
